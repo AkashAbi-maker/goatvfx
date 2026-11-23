@@ -6203,7 +6203,7 @@ body {
   min-height: 68px;
   padding: 10px 4%;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 20px;
   background: linear-gradient(
@@ -9871,6 +9871,22 @@ img[src*='.gif'] {
 
 /* Mobile remains naturally scrollable and keeps the full image/video visible. */
 @media (max-width: 760px) {
+  .our-work-section > .our-work-background-video,
+  .section-03 > .section-03-background-video,
+  .section-07-domain > .section-07-background-video,
+  .section-08-contact > .section-08-background-video {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    pointer-events: none !important;
+  }
+
   #section-06.section-06-pipeline {
     height: auto;
     max-height: none;
@@ -13019,12 +13035,17 @@ img[src*='.gif'] {
 
 /* Section 01 intro copy hierarchy: emphasize the requested brand lines. */
 .cinematic-intro .intro-brand .intro-eyebrow,
-.cinematic-intro .intro-brand .intro-tagline,
+.cinematic-intro .intro-brand .intro-tagline {
+  font-weight: 900 !important;
+  text-shadow: 0 0 8px rgba(104, 190, 255, 0.72), 0 0 20px rgba(54, 134, 255, 0.48);
+}
 .cinematic-intro .intro-welcome-kicker {
   font-weight: 900 !important;
+  filter: drop-shadow(0 0 9px rgba(52, 157, 255, 0.98)) drop-shadow(0 0 22px rgba(31, 112, 255, 0.78));
 }
 .cinematic-intro .intro-welcome-copy {
-  font-weight: 700 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 0 9px rgba(104, 190, 255, 0.68), 0 0 22px rgba(54, 134, 255, 0.42);
 }
 .cinematic-intro .intro-welcome-categories span,
 .cinematic-intro .intro-next-button {
@@ -14578,9 +14599,9 @@ img[src*='.gif'] {
 .section-08-contact-list{display:grid;max-width:700px}
 .section-08-contact-row{display:grid;grid-template-columns:48px 105px minmax(0,1fr) 18px;align-items:center;gap:16px;min-height:clamp(52px,7vh,64px);border-bottom:1px solid rgba(232,211,255,.34);color:#fff;text-decoration:none;text-shadow:0 1px 8px #000}
 .section-08-contact-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,194,92,.9);border-radius:50%;background:rgba(10,7,18,.45);color:#ffd06a;font-size:20px;box-shadow:0 0 22px rgba(255,172,62,.22),inset 0 0 12px rgba(255,172,62,.08)}
-.section-08-contact-row b{color:#ffd477;font-size:11px;letter-spacing:.14em}
-.section-08-contact-row>span:nth-of-type(2){min-width:0;overflow-wrap:anywhere;color:#fff;font-size:clamp(11px,1vw,15px);letter-spacing:.025em}
-.section-08-contact-row i{color:#e8caff;font-style:normal}
+.section-08-contact-row b{color:#ffd477;font-size:11px;font-weight:900;letter-spacing:.14em;text-shadow:0 0 8px rgba(255,196,92,.38)}
+.section-08-contact-row>span:nth-of-type(2){min-width:0;overflow-wrap:anywhere;color:#fff;font-size:clamp(11px,1vw,15px);font-weight:900;letter-spacing:.025em;text-shadow:0 0 9px rgba(224,194,255,.28),0 1px 8px #000}
+.section-08-contact-row i{color:#e8caff;font-style:normal;text-shadow:0 0 8px rgba(214,171,255,.55)}
 .section-08-contact-row[href]:hover{background:linear-gradient(90deg,rgba(154,89,255,.18),transparent);padding-left:8px}
 .section-08-signoff{position:absolute;z-index:3;right:clamp(18px,3vw,44px);bottom:clamp(62px,8.5vh,80px);max-width:min(360px,48vw);margin:0;transform:translateY(-46px);color:#fff5ff;font-size:clamp(9px,.9vw,12px);letter-spacing:.18em;line-height:1.8;text-align:right;text-shadow:0 2px 10px #000}
 .section-08-signoff strong{display:block;color:#ffd477;font-size:1.08em;letter-spacing:.16em}
@@ -14923,6 +14944,162 @@ img[src*='.gif'] {
   }
 }
 
+/* Section 07 mobile content and navigation: keep all items in their own flow. */
+@media (max-width: 760px) {
+  .section-07-content {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    grid-template-rows: auto auto auto !important;
+    gap: 26px !important;
+    padding: 24px 16px 104px !important;
+  }
+
+  .section-07-main-grid,
+  .section-07-lower-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 24px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .section-07-brand-copy,
+  .section-07-approach,
+  .section-07-philosophy,
+  .section-07-vision-copy,
+  .section-07-identity {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .section-07-approach {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .section-07-approach h2 {
+    grid-column: auto !important;
+    margin: 0 0 4px !important;
+  }
+
+  .section-07-approach article {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .section-07-back-floating,
+  .section-07-next-floating {
+    position: absolute !important;
+    top: auto !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+  }
+
+  .section-07-back-floating { left: 16px !important; right: auto !important; }
+  .section-07-next-floating { right: 16px !important; left: auto !important; }
+}
+
+/* Final Section 08 phone layout: place the controls after all shared rules. */
+@media (max-width: 760px) {
+  .section-08-contact {
+    animation: none !important;
+    transform: none !important;
+    padding-bottom: max(84px, env(safe-area-inset-bottom) + 72px) !important;
+  }
+
+  .section-08-back {
+    position: static !important;
+    display: inline-flex !important;
+    width: max-content !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    justify-self: end !important;
+    margin: 14px !important;
+    z-index: 60 !important;
+  }
+
+  .section-08-layout {
+    gap: 24px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .section-08-project-panel {
+    transform: none !important;
+    margin: 34px 0 0 !important;
+    min-height: 0 !important;
+    padding-bottom: 26px !important;
+  }
+
+  .section-08-qr-empty {
+    width: min(100%, 240px) !important;
+    margin: 0 auto !important;
+  }
+
+  .section-08-signoff {
+    position: relative !important;
+    inset: auto !important;
+    width: 90% !important;
+    max-width: 420px !important;
+    margin: 8px auto 18px !important;
+    transform: none !important;
+    text-align: center !important;
+  }
+
+  .section-08-bottom-line {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    margin: 12px auto 0 !important;
+    padding: 0 16px 14px !important;
+    transform: none !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* Section 08 phone controls: keep navigation and the QR clear of each other. */
+@media (max-width: 760px) {
+  .section-08-back {
+    position: static !important;
+    display: inline-flex !important;
+    width: max-content !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 40px !important;
+    margin: 0 !important;
+    padding: 9px 14px !important;
+  }
+
+  .section-08-logo-overlay {
+    top: 12px !important;
+    left: 14px !important;
+    width: 112px !important;
+  }
+
+  .section-08-project-panel {
+    align-items: flex-end !important;
+  }
+
+  .section-08-qr-empty {
+    width: min(100%, 220px) !important;
+    margin-right: 12px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .section-051-pro-brand-waterflow {
+    left: 12% !important;
+    width: 84% !important;
+    height: 86% !important;
+  }
+}
+
 @media (max-width: 520px) {
   .our-work-section .our-work-content { padding-inline: 12px; }
   .our-work-section .our-work-logo-stage { width: 100% !important; }
@@ -14947,6 +15124,29 @@ img[src*='.gif'] {
 
 @media (max-width: 900px) {
   .section-051-pro { overflow-y: visible !important; }
+}
+
+/* Mobile-only Section 02 scale and Section 04 background coverage fixes. */
+@media (max-width: 760px) {
+  .section-04 {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .our-work-section .our-work-hanging-spider {
+    width: min(112vw, 560px) !important;
+    max-width: none !important;
+    max-height: 95svh !important;
+  }
+
+  .section-04 > .section-04-background {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    transform: none !important;
+  }
 }
 
 
@@ -15032,6 +15232,7 @@ img[src*='.gif'] {
     pointer-events: none !important;
   }
 
+
   /* SECTION 02 — OUR WORK */
   .our-work-section .our-work-content {
     width: 100% !important;
@@ -15045,6 +15246,17 @@ img[src*='.gif'] {
     gap: 14px !important;
     padding: max(82px, env(safe-area-inset-top) + 68px) 18px
       max(28px, env(safe-area-inset-bottom) + 18px) !important;
+  }
+
+  .our-work-section {
+    height: auto !important;
+    min-height: 100dvh !important;
+    overflow: visible !important;
+  }
+
+  .our-work-section .our-work-content {
+    position: relative !important;
+    z-index: 1 !important;
   }
 
   .our-work-section .our-work-logo-stage {
@@ -15322,9 +15534,10 @@ img[src*='.gif'] {
   }
 
   .section-08-back {
-    position: relative !important;
+    position: static !important;
     inset: auto !important;
     min-height: 44px !important;
+    justify-self: end !important;
     margin: 14px !important;
   }
 
@@ -15387,7 +15600,7 @@ img[src*='.gif'] {
   }
 
   .section-04-bottom {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
   }
 
   .section-05-content {
@@ -15445,3 +15658,785 @@ img[src*='.gif'] {
     }
   }
 }
+
+/* Section 02: keep the category strapline under the navigation on phones. */
+@media (max-width: 760px) {
+  .our-work-section .our-work-actions {
+    width: min(100%, 420px) !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+  }
+
+  .our-work-section .our-work-actions .our-work-nav-button {
+    flex: 0 0 42% !important;
+    width: 42% !important;
+    min-width: 0 !important;
+  }
+
+  .our-work-section .our-work-divider {
+    width: 100% !important;
+    gap: clamp(8px, 2.5vw, 14px) !important;
+  }
+
+  .our-work-section .our-work-divider h2 {
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    font-size: clamp(20px, 6.2vw, 28px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: 0.16em !important;
+    white-space: nowrap !important;
+  }
+
+  .our-work-section .our-work-divider span {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 12px !important;
+  }
+
+  .our-work-section .our-work-footer {
+    display: block !important;
+    width: 100% !important;
+    margin: 14px auto 0 !important;
+    padding: 0 8px !important;
+    text-align: center !important;
+    font-size: clamp(7px, 2vw, 9px) !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0.12em !important;
+  }
+}
+
+@media (min-width: 761px) {
+  .our-work-section .our-work-footer {
+    display: none !important;
+  }
+}
+
+/* Section 03 Iron Man intro: crop embedded black edges on phones only. */
+@media (max-width: 760px) {
+  .section-03-intro-screen {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100svh !important;
+    height: 100dvh !important;
+  }
+
+  .section-03-intro-screen .section-03-intro-video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.48) !important;
+    transform-origin: center center !important;
+  }
+}
+
+/* Crop the Section 04 intro's embedded letterbox on mobile and tablet only. */
+@media (max-width: 900px) {
+  /* Remove transition transforms so fixed media uses the mobile viewport. */
+  .section-04 {
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    overflow: visible !important;
+  }
+
+  /* The shared section entrance animation applies a transform to every
+     visible section, which makes fixed children use the section as their
+     containing block. The intro must stay fixed to the actual viewport. */
+  .section-04.section-04-intro-playing {
+    animation: none !important;
+  }
+
+  .section-04-intro {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100svh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  .section-04-intro .section-04-intro-video {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.3, 1.6) !important;
+    transform-origin: center center !important;
+  }
+
+  .section-04 > .section-04-background {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: none !important;
+  }
+
+  .section-03 {
+    height: auto !important;
+    min-height: 100dvh !important;
+    overflow: visible !important;
+  }
+
+  .section-03-content {
+    position: relative !important;
+    z-index: auto !important;
+  }
+
+  .section-04.section-04-intro-playing .section-04-bottom {
+    display: none !important;
+  }
+
+  .section-04-bottom {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: none !important;
+    gap: 14px !important;
+    width: 100% !important;
+    padding: 10px 16px !important;
+  }
+
+  .section-04-bottom .section-04-back,
+  .section-04-bottom .section-04-next {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    flex: 0 1 42% !important;
+    width: 42% !important;
+    min-width: 82px !important;
+    max-width: 120px !important;
+    min-height: 40px !important;
+    padding: 8px 10px !important;
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+  }
+
+  .section-04-central-portal .section-04-portal-inner {
+    width: 74% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    transform: translateY(-4px) !important;
+  }
+
+  .section-04-central-portal .section-04-central-logo {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .section-04-central-portal .section-04-central-logo img {
+    display: block !important;
+    width: min(100%, 84px) !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    object-fit: contain !important;
+  }
+
+  .section-04-central-portal .section-04-portal-inner p {
+    width: 100% !important;
+    margin: 0 !important;
+    font-size: 6px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.3px !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .section-04-central-portal .section-04-portal-inner p + p {
+    margin-top: 0 !important;
+    font-size: 5px !important;
+    letter-spacing: 0.15px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .section-05-intro-layer {
+    overflow: hidden !important;
+  }
+
+  .section-05-intro-video {
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: translateY(12px) scale(1.15, 1.55) !important;
+    transform-origin: center center !important;
+  }
+}
+
+/* Section 03 mobile: place navigation after the content and keep sparks visible. */
+@media (max-width: 760px) {
+  .section-03 .section-03-content {
+    position: relative !important;
+    padding-bottom: max(104px, calc(env(safe-area-inset-bottom) + 92px)) !important;
+  }
+
+  .section-03 .section-03-navigation {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    width: 100% !important;
+    margin: 0 !important;
+    z-index: 20 !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+  }
+
+  .section-03 .section-03-navigation button {
+    flex: 0 0 42% !important;
+    width: 42% !important;
+    min-width: 0 !important;
+    min-height: 40px !important;
+    padding: 7px 9px !important;
+    font-size: 9px !important;
+  }
+
+  .section-03 .section-03-brand-lockup {
+    left: auto !important;
+    z-index: auto !important;
+    isolation: auto !important;
+    overflow: visible !important;
+  }
+
+  .section-03 .section-03-spark-video {
+    left: 50% !important;
+    display: block !important;
+    top: -50% !important;
+    width: 220% !important;
+    height: 230% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    transform: translateX(-50%) !important;
+    z-index: 1 !important;
+    opacity: 1 !important;
+    mix-blend-mode: screen !important;
+    isolation: auto !important;
+    will-change: transform !important;
+    background: transparent !important;
+    clip-path: none !important;
+    filter: brightness(1.45) contrast(1.12) saturate(1.1) !important;
+    pointer-events: none !important;
+    background: transparent !important;
+  }
+
+}
+
+/* Mobile-only refinements for the Section 02 spider and Section 04 video. */
+@media (max-width: 760px) {
+  .our-work-section .our-work-hanging-spider {
+    position: absolute !important;
+    top: -5px !important;
+    left: -15px !important;
+    right: auto !important;
+    width: min(112vw, 560px) !important;
+    max-height: 95svh !important;
+    height: auto !important;
+    mix-blend-mode: screen !important;
+    animation: spiderSwing 1s linear infinite !important;
+  }
+
+  .section-04 > .section-04-background {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    transform: scale(1.2) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+}
+
+/* Section 05 mobile background framing only. */
+@media (max-width: 760px) {
+  section.section-05 {
+    height: auto !important;
+    min-height: 100dvh !important;
+  }
+
+  section.section-05 > .section-05-background {
+    position: fixed !important;
+    inset: 0 auto auto 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-width: none !important;
+    z-index: -3 !important;
+    transform: scale(1.16) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: 78% center !important;
+  }
+
+  section.section-05 .section-05-detail-overlay button[aria-label="Back to six universes"] {
+    top: 28vh !important;
+  }
+}
+
+/* Section 06 mobile intro: fill the viewport and crop embedded black edges. */
+@media (max-width: 760px) {
+  #section-06.section-06-pipeline {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  #section-06 .section-06-intro-layer {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  #section-06 .section-06-intro-video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100% !important;
+    transform: scale(1.3) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+}
+
+/* Section 05.1 mobile intro: extend the picture beyond its clipped viewport. */
+@media (max-width: 760px) {
+  section.section-05 {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .section-05-intro-layer {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  .section-05-intro-video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100% !important;
+    transform: scale(1.25) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .section-051-pro .section-051-pro-next {
+    transform: translateX(-12px) !important;
+  }
+
+  .section-051-pro {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .section-051-pro > .section-051-background {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    transform: scale(1.2) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .section-051-pro .section-051-intro-layer {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  .section-051-pro .section-051-intro-video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100% !important;
+    transform: scale(1.35) !important;
+    transform-origin: center center !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+}
+
+/* Keep Section 06 mobile branding and title clear of its moving footage. */
+@media (max-width: 760px) {
+  #section-06 .section-06-pipeline-shell {
+    grid-template-rows: 90px minmax(0, 1fr) 34px !important;
+  }
+
+  #section-06 .section-06-title-card {
+    position: relative !important;
+    display: block !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
+    padding: 5px 6px !important;
+  }
+
+  #section-06 .section-06-title-copy {
+    position: absolute !important;
+    top: 60% !important;
+    left: 50% !important;
+    z-index: 5 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: calc(100% - 154px) !important;
+    max-width: 230px !important;
+    padding: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    overflow: visible !important;
+    text-align: center !important;
+  }
+
+  #section-06 .section-06-title-copy h1,
+  #section-06 .section-06-title-copy > span {
+    position: relative !important;
+    z-index: 5 !important;
+  }
+
+  #section-06 .section-06-title-copy h1 {
+    display: block !important;
+    font-size: clamp(12px, 4.2vw, 17px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    letter-spacing: .035em !important;
+  }
+
+  #section-06 .section-06-title-copy > span {
+    display: block !important;
+    visibility: visible !important;
+    max-width: 100% !important;
+    margin-top: 8px !important;
+    flex: 0 0 auto !important;
+    font-size: clamp(5px, 1.6vw, 6px) !important;
+    letter-spacing: .04em !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    text-align: center !important;
+  }
+
+  #section-06 .section-06-logo-glitch {
+    position: absolute !important;
+    top: 50% !important;
+    left: 5px !important;
+    right: auto !important;
+    margin: 0 !important;
+    width: 82px !important;
+    height: 54px !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    transform: translateY(-50%) !important;
+    z-index: 4 !important;
+  }
+
+  #section-06 .section-06-artist-window {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: 25% !important;
+    opacity: .75 !important;
+    z-index: 0 !important;
+  }
+
+  #section-06 .section-06-artist-shade {
+    z-index: 1 !important;
+  }
+}
+
+/* Section 07 mobile intro: crop the embedded lower letterbox only. */
+@media (max-width: 760px) {
+  .section-07-domain {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .section-07-intro-layer {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
+
+  .section-07-intro-video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100% !important;
+    transform: scaleY(1.2) !important;
+    transform-origin: center top !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+}
+
+/* Final Section 07 mobile flow overrides. */
+@media (max-width: 760px) {
+  .section-07-header {
+    min-height: 116px !important;
+    justify-content: center !important;
+  }
+
+  .section-07-wordmark {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 108px !important;
+    padding: 8px 12px !important;
+    overflow: hidden !important;
+    font-size: clamp(18px, 6vw, 24px) !important;
+  }
+
+  .section-07-title-gif {
+    z-index: 0 !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 150px !important;
+    height: 180px !important;
+    transform: translate(-50%, -50%) scale(2.1) !important;
+    opacity: .85 !important;
+  }
+
+  .section-07-content {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100svh !important;
+    grid-template-rows: auto auto auto !important;
+    gap: 26px !important;
+    padding: 24px 16px 104px !important;
+  }
+
+  .section-07-main-grid,
+  .section-07-lower-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 24px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .section-07-brand-copy,
+  .section-07-approach,
+  .section-07-philosophy,
+  .section-07-vision-copy,
+  .section-07-identity {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .section-07-brand-copy,
+  .section-07-approach,
+  .section-07-lower-grid,
+  .section-07-philosophy,
+  .section-07-vision-copy,
+  .section-07-identity,
+  .section-07-identity h2 {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+
+  .section-07-brand-copy {
+    padding: 14px !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    border-radius: 12px !important;
+    background: rgba(4, 5, 12, .58) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .section-07-lead {
+    color: #fff !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+  }
+
+  .section-07-approach {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .section-07-approach h2 {
+    grid-column: auto !important;
+    margin: 0 0 4px !important;
+  }
+
+  .section-07-approach article {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .section-07-identity-body {
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+
+  .section-07-horn-mark {
+    box-sizing: border-box !important;
+    flex: 0 0 58px !important;
+    width: 58px !important;
+    text-align: center !important;
+  }
+
+  .section-07-identity-body p {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+
+  .section-07-back-floating,
+  .section-07-next-floating {
+    position: absolute !important;
+    top: auto !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+  }
+
+  .section-07-back-floating { left: 16px !important; right: auto !important; }
+  .section-07-next-floating { right: 16px !important; left: auto !important; }
+}
+
+/* Section 08 final mobile overrides, after the shared responsive rules. */
+@media (max-width: 760px) {
+  .section-08-contact {
+    animation: none !important;
+    transform: none !important;
+    padding-bottom: max(84px, env(safe-area-inset-bottom) + 72px) !important;
+  }
+
+  .section-08-back {
+    position: static !important;
+    inset: auto !important;
+    display: inline-flex !important;
+    width: max-content !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    justify-self: end !important;
+    margin: 14px !important;
+    z-index: 4 !important;
+  }
+
+  .section-08-layout {
+    gap: 24px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .section-08-project-panel {
+    transform: none !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    padding-bottom: 26px !important;
+  }
+
+  .section-08-qr-empty {
+    width: min(100%, 240px) !important;
+    margin: 0 auto !important;
+  }
+
+  .section-08-signoff {
+    position: relative !important;
+    inset: auto !important;
+    width: 90% !important;
+    max-width: 420px !important;
+    margin: 8px auto 18px !important;
+    transform: none !important;
+    text-align: center !important;
+  }
+}
+
+/* Section 08 QR panel placement on laptop and phone. */
+.section-08-project-panel {
+  transform: translate(clamp(0px, 3vw, 40px), -16px) !important;
+}
+
+/* Mobile pinned backgrounds for scrollable sections. */
+@media (max-width: 760px) {
+  .our-work-section .our-work-hanging-spider {
+    width: min(82vw, 440px) !important;
+  }
+
+  .our-work-section,
+  .section-03,
+  .section-07-domain,
+  .section-08-contact {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .our-work-section > .our-work-background-video,
+  .section-03 > .section-03-background-video,
+  .section-07-domain > .section-07-background-video,
+  .section-08-contact > .section-08-background-video {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: none !important;
+    pointer-events: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .section-08-project-panel {
+    transform: none !important;
+    margin-top: 140px !important;
+  }
+}
+

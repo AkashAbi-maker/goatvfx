@@ -6,6 +6,12 @@ import { flushSync } from "react-dom";
 import gsap from "gsap";
 import * as THREE from "three";
 
+function activateVideo(video: HTMLVideoElement | null) {
+  if (!video) return;
+  video.preload = "auto";
+  video.load();
+}
+
 
 
 // ============================================
@@ -30,7 +36,7 @@ function CinematicIntro({
   const [isMuted, setIsMuted] = useState(true);
   const [logoVisible, setLogoVisible] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [welcomeVisible, setWelcomeVisible] = useState(false);
+  const welcomeVisible = showUniverse;
 
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -80,6 +86,7 @@ function CinematicIntro({
       }
 
       if (universeRef.current) {
+        activateVideo(universeRef.current);
         gsap.set(universeRef.current, { opacity: 0, clearProps: "transform" });
         void universeRef.current.play().catch((error) => {
           console.error("Universe playback failed:", error);
@@ -94,12 +101,6 @@ function CinematicIntro({
 
     wasActive.current = isActive;
   }, [isActive]);
-
-  // Show the welcome copy as soon as the portal transition reaches the universe.
-  // The CSS handles the visual fade; no JavaScript timer delays its appearance.
-  useEffect(() => {
-    setWelcomeVisible(showUniverse);
-  }, [showUniverse]);
 
   // Portal video speed
 useEffect(() => {
@@ -118,6 +119,8 @@ useEffect(() => {
     if (!isActive || showUniverse) return;
     if (!animationsEnabled) {
       transitionStarted.current = true;
+      // Synchronize the intro UI with the user's motion preference.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowUniverse(true);
       setLogoVisible(true);
       const portal = videoRef.current;
@@ -125,12 +128,14 @@ useEffect(() => {
       if (portal) { portal.pause(); portal.muted = true; }
       if (universe) {
         universe.currentTime = 0;
+        activateVideo(universe);
         void universe.play().catch((error) => console.warn("Universe loop playback failed:", error));
       }
       return;
     }
     const video = videoRef.current;
     if (!video) return;
+    activateVideo(video);
 
     let cancelled = false;
 
@@ -174,13 +179,17 @@ useEffect(() => {
       transitionStarted.current = false;
       const portal = videoRef.current;
       if (portal) { portal.pause(); portal.muted = true; }
+      // Synchronize component state with media and motion preference.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsMuted(true);
       setSoundEnabled(false);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowUniverse(true);
       setLogoVisible(true);
       const universe = universeRef.current;
       if (universe) {
         universe.currentTime = 0;
+        activateVideo(universe);
         void universe.play().catch((error) => console.warn("Universe loop playback failed:", error));
       }
     }
@@ -279,6 +288,8 @@ const skipIntro = () => {
       pullAudio.pause();
       pullAudio.currentTime = 0;
     }
+    // Stop the active transition when the motion preference changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsPulling(false);
     setIsMuted(true);
     setSoundEnabled(false);
@@ -390,7 +401,7 @@ const triggerWebPull = useCallback(() => {
     <audio
       ref={webPullAudioRef}
       src="/videos/web-pull-shoot.mp3"
-      preload="auto"
+      preload="metadata"
     />
       {/* PORTAL VIDEO */}
 
@@ -400,12 +411,12 @@ const triggerWebPull = useCallback(() => {
         autoPlay={animationsEnabled && !showUniverse}
         muted={isMuted}
         playsInline
-        preload="auto"
+        preload="metadata"
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => void startUniverse()}
       >
         <source
-          src="/videos/portal-opening.mp4"
+          src="/videos/portal-opening.720p.mp4"
           type="video/mp4"
         />
       </video>
@@ -436,7 +447,7 @@ const triggerWebPull = useCallback(() => {
 {isPulling && (
   <img
     key="goat-web-pull-final"
-    src="/videos/goat-vfx-web-pull-final.gif"
+    src="/videos/goat-vfx-web-pull-final.webp"
     alt=""
     className="web-pull-animation"
   />
@@ -546,6 +557,7 @@ function OurWorkSection({ onBack, onNext, isLeaving, isEntering, isHidden }: { o
     if (isHidden) {
       video.pause();
     } else {
+      activateVideo(video);
       void video.play().catch(() => {});
     }
   }, [isHidden]);
@@ -595,7 +607,7 @@ function OurWorkSection({ onBack, onNext, isLeaving, isEntering, isHidden }: { o
         preload="none"
       >
         <source
-          src="/videos/goat-vfx-section2-spiderman-background.mp4"
+          src="/videos/goat-vfx-section2-spiderman-background.optimized.mp4"
           type="video/mp4"
         />
       </video>
@@ -609,7 +621,7 @@ function OurWorkSection({ onBack, onNext, isLeaving, isEntering, isHidden }: { o
       />
 
       <img
-        src="/videos/goat-vfx-hanging-spider-fast.gif?v=2"
+        src="/videos/goat-vfx-hanging-spider-fast.webp"
         alt=""
         aria-hidden="true"
         loading="lazy"
@@ -621,7 +633,7 @@ function OurWorkSection({ onBack, onNext, isLeaving, isEntering, isHidden }: { o
 
         <div className="our-work-logo-stage">
           <img
-            src="/videos/goat-vfx-section2-four-corner-web-animated-transparent.gif"
+            src="/videos/goat-vfx-section2-four-corner-web-animated-transparent.webp"
             alt=""
             aria-hidden="true"
             loading="lazy"
@@ -721,6 +733,7 @@ function Section03Transition({ onComplete }: { onComplete: () => void }) {
     const video = introRef.current;
     if (!video) return;
 
+    activateVideo(video);
     let disposed = false;
     video.currentTime = 0;
     video.playbackRate = 1;
@@ -781,7 +794,7 @@ function Section03Transition({ onComplete }: { onComplete: () => void }) {
         className="section-03-intro-video"
         autoPlay
         playsInline
-        preload="auto"
+        preload="metadata"
         onEnded={finishIntro}
         onError={finishIntro}
       >
@@ -806,45 +819,69 @@ function Section03({ onBack, onNext, isLeaving = false, isHidden = false }: { on
     const spark = section?.querySelector<HTMLVideoElement>(".section-03-spark-video");
     if (!background) return;
 
-    // Keep the full-screen background as the only continuously decoded video.
-    // The spark layer sits outside the visible brand lockup in the current CSS,
-    // so do not start a second decoder for an off-screen decorative video.
-    if (spark) {
-      spark.pause();
-      spark.preload = "none";
-    }
-
-    if (isHidden || document.visibilityState === "hidden") {
-      background.pause();
-      return;
-    }
-
     background.muted = true;
     background.loop = true;
-    // Do not seek to 0 on every section re-entry; seeking a large MP4 can
-    // create a visible freeze while the browser finds the next keyframe.
-    if (background.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-      void background.play().catch((error) => {
-        if (error instanceof Error && error.name !== "AbortError") {
-          console.warn("Section 03 background playback failed:", error);
-        }
-      });
-    } else {
-      const startWhenReady = () => {
-        if (!isHidden && document.visibilityState !== "hidden") {
-          void background.play().catch((error) => {
-            if (error instanceof Error && error.name !== "AbortError") {
-              console.warn("Section 03 background playback failed:", error);
-            }
-          });
-        }
-      };
-      background.addEventListener("canplay", startWhenReady, { once: true });
-      background.load();
-      return () => background.removeEventListener("canplay", startWhenReady);
+    if (spark) {
+      spark.muted = true;
+      spark.loop = true;
+      spark.preload = "auto";
     }
 
-    return () => background.pause();
+    const stopVideos = () => {
+      background.pause();
+      spark?.pause();
+    };
+
+    const startBackground = () => {
+      if (!isHidden && document.visibilityState !== "hidden") {
+        void background.play().catch((error) => {
+          if (error instanceof Error && error.name !== "AbortError") {
+            console.warn("Section 03 background playback failed:", error);
+          }
+        });
+      }
+    };
+
+    const playVideos = () => {
+      if (isHidden || document.visibilityState === "hidden") {
+        stopVideos();
+        return;
+      }
+
+      // Keep the background and the visible spark overlay in sync with this section.
+      if (background.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+        void background.play().catch((error) => {
+          if (error instanceof Error && error.name !== "AbortError") {
+            console.warn("Section 03 background playback failed:", error);
+          }
+        });
+      } else {
+        activateVideo(background);
+        background.addEventListener("canplay", startBackground, { once: true });
+      }
+
+      if (spark) {
+        void spark.play().catch((error) => {
+          if (error instanceof Error && error.name !== "AbortError") {
+            console.warn("Section 03 spark overlay playback failed:", error);
+          }
+        });
+      }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") stopVideos();
+      else playVideos();
+    };
+
+    playVideos();
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      background.removeEventListener("canplay", startBackground);
+      stopVideos();
+    };
   }, [isHidden]);
 
   const factors = [
@@ -906,7 +943,7 @@ function Section03({ onBack, onNext, isLeaving = false, isHidden = false }: { on
       aria-hidden="true"
     >
       <source
-        src="/videos/ironman-background.mp4"
+        src="/videos/ironman-background.720p.mp4"
         type="video/mp4"
       />
     </video>
@@ -1160,6 +1197,7 @@ const handleRingSelect = (index: number) => {
       return;
     }
 
+    activateVideo(background);
     void background.play().catch((error) => {
       if (error instanceof Error && error.name === "AbortError") return;
       console.warn("Section 04 background playback failed:", error);
@@ -1210,6 +1248,7 @@ const handleRingSelect = (index: number) => {
     setIntroHasFinished(false);
     setNeedsSoundGesture(false);
     setIntroPlaying(true);
+    activateVideo(introVideoRef.current);
     // This short sting must never hold navigation indefinitely if the browser
     // gets stuck before firing playing, waiting, ended, or error.
     if (introSafetyTimerRef.current) clearTimeout(introSafetyTimerRef.current);
@@ -1224,6 +1263,7 @@ const handleRingSelect = (index: number) => {
 
     const video = introVideoRef.current;
     if (!video) return;
+    activateVideo(video);
 
     let disposed = false;
     const onPlaying = () => {
@@ -1395,7 +1435,7 @@ const handleRingSelect = (index: number) => {
         loop
         playsInline
         preload="none"
-        src="/videos/section4-background.mp4"
+        src="/videos/section4-background.optimized.mp4"
         aria-hidden="true"
         onCanPlay={onBackgroundReady}
         onError={onBackgroundReady}
@@ -1416,7 +1456,7 @@ const handleRingSelect = (index: number) => {
             ref={introVideoRef}
             className="section-04-intro-video"
             src="/videos/section4-intro.mp4"
-            preload="auto"
+          preload="metadata"
             playsInline
             onEnded={finishSection04Intro}
             onError={finishSection04Intro}
@@ -1435,7 +1475,7 @@ const handleRingSelect = (index: number) => {
         <div className="section-04-brand-card">
           <img
             className="section-04-dragon-overlay"
-            src="/videos/goat-vfx-dragon-overlay.gif"
+            src="/videos/goat-vfx-dragon-overlay.webp"
             alt=""
             aria-hidden="true"
             loading="lazy"
@@ -1765,21 +1805,6 @@ const handleRingSelect = (index: number) => {
           <span>←</span> BACK
         </button>
 
-        <div className="section-04-ring-selector">
-          {rings.map((ring, index) => (
-            <button
-              key={ring.number}
-              type="button"
-              className={selectedRing === index ? "active" : ""}
-              onClick={() => handleRingSelect(index)}
-              aria-label={`Show capability ${ring.number}`}
-              aria-pressed={selectedRing === index}
-            >
-              {ring.number}
-            </button>
-          ))}
-        </div>
-
         <button
           type="button"
           className="section-04-next"
@@ -1798,7 +1823,7 @@ const handleRingSelect = (index: number) => {
 // SECTION 05 — PROCEDURAL 3D UNIVERSE DIORAMAS
 // Requires: npm install three
 // ============================================
-function Section05UniverseScene({ labelElements, onSelectUniverse }: { labelElements: Array<HTMLDivElement | null>; onSelectUniverse: (index: number) => void }) {
+function Section05UniverseScene({ labelElements, onSelectUniverse }: { labelElements: React.RefObject<Array<HTMLDivElement | null>>; onSelectUniverse: (index: number) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -2110,7 +2135,7 @@ function Section05UniverseScene({ labelElements, onSelectUniverse }: { labelElem
         group.position.y = group.userData.baseY + Math.sin(t * 0.8 + i) * 0.08;
         group.rotation.y += 0.0009 * (i % 2 ? 1 : -1);
 
-        const label = labelElements[i];
+        const label = labelElements.current[i];
         if (!label || label.dataset.positioned === "true") return;
 
         group.getWorldPosition(worldPosition);
@@ -2226,7 +2251,7 @@ function Section05UniverseScene({ labelElements, onSelectUniverse }: { labelElem
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      labelElements.forEach((label) => {
+      labelElements.current.forEach((label) => {
         if (label) delete label.dataset.positioned;
       });
     };
@@ -2285,17 +2310,19 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
   const finishStartedRef = useRef(false);
 
   const universes = [
-    { number: "01", title: "VFX", subtitle: "VISUAL EFFECTS", className: "vfx", image: "/images/universe-vfx.png" },
-    { number: "02", title: "CGI", subtitle: "3D & CGI", className: "cgi", image: "/images/universe-cgi.png" },
-    { number: "03", title: "ANIMATION", subtitle: "3D ANIMATION", className: "animation", image: "/images/universe-animation.png" },
-    { number: "04", title: "MOTION GRAPHICS", subtitle: "MOTION DESIGN", className: "motion", image: "/images/universe-motion-graphics.png" },
-    { number: "05", title: "COMPOSITING", subtitle: "VISUAL INTEGRATION", className: "compositing", image: "/images/universe-compositing.png" },
-    { number: "06", title: "POST PRODUCTION", subtitle: "EDITING & FINISHING", className: "post", image: "/images/universe-post-production.png" },
+    { number: "01", title: "VFX", subtitle: "VISUAL EFFECTS", className: "vfx", image: "/images/universe-vfx.webp" },
+    { number: "02", title: "CGI", subtitle: "3D & CGI", className: "cgi", image: "/images/universe-cgi.webp" },
+    { number: "03", title: "ANIMATION", subtitle: "3D ANIMATION", className: "animation", image: "/images/universe-animation.webp" },
+    { number: "04", title: "MOTION GRAPHICS", subtitle: "MOTION DESIGN", className: "motion", image: "/images/universe-motion-graphics.webp" },
+    { number: "05", title: "COMPOSITING", subtitle: "VISUAL INTEGRATION", className: "compositing", image: "/images/universe-compositing.webp" },
+    { number: "06", title: "POST PRODUCTION", subtitle: "EDITING & FINISHING", className: "post", image: "/images/universe-post-production.webp" },
   ];
 
   useEffect(() => {
     const background = backgroundRef.current;
     if (!animationsEnabled) {
+      // Motion preference changes can skip an in-progress intro.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIntroFinished(true);
       introRef.current?.pause();
     }
@@ -2305,6 +2332,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
       if (isHidden || !introFinished) {
         background.pause();
       } else {
+        activateVideo(background);
         void background.play().catch((error) => {
           console.warn("Section 05 background playback failed:", error);
         });
@@ -2320,6 +2348,8 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
       };
     }
     if (!animationsEnabled) {
+      // Motion preference changes can skip an in-progress intro.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIntroFinished(true);
       intro?.pause();
       return () => {
@@ -2328,6 +2358,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
       };
     }
     if (intro) {
+      activateVideo(intro);
       intro.muted = false;
       intro.defaultMuted = false;
       intro.volume = 1;
@@ -2346,13 +2377,6 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
       intro?.pause();
     };
   }, [animationsEnabled, introFinished, isHidden]);
-
-  useEffect(() => {
-    if (!animationsEnabled && !introFinished) {
-      introRef.current?.pause();
-      setIntroFinished(true);
-    }
-  }, [animationsEnabled, introFinished]);
 
   const finishIntro = () => {
     if (finishStartedRef.current) return;
@@ -2374,7 +2398,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
       <video
         ref={backgroundRef}
         className="section-05-background"
-        src="/videos/section5-background.mp4"
+        src="/videos/section5-background.720p.mp4"
         muted
         loop
         playsInline
@@ -2456,7 +2480,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
           <video
             ref={introRef}
             className="section-05-intro-video"
-            src="/videos/section5-intro.mp4"
+            src="/videos/section5-intro.720p.mp4"
             playsInline
             preload="none"
             onEnded={finishIntro}
@@ -2474,7 +2498,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
             <div className="section-05-brand-card">
               <img
                 className="section-05-energy-rope"
-                src="/videos/section-05-emerald-energy-rope.gif"
+                src="/videos/section-05-emerald-energy-rope.webp"
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
@@ -2499,7 +2523,7 @@ function Section05({ onBack, onNext, animationsEnabled, isHidden = false }: { on
             </div>
 
             <div className="section-05-universe-field" aria-label="Six miniature 3D creative universes">
-              <Section05UniverseScene labelElements={labelElements.current} onSelectUniverse={setSelectedUniverse} />
+              <Section05UniverseScene labelElements={labelElements} onSelectUniverse={setSelectedUniverse} />
               {universes.map((universe, index) => (
                 <div className={`section-05-universe section-05-universe-${universe.className}`} key={universe.number}>
                   <div
@@ -2556,6 +2580,7 @@ function Section051({
       }
       const intro = introRef.current;
       if (!intro) return;
+      activateVideo(intro);
       intro.currentTime = 0;
       intro.muted = false;
       intro.defaultMuted = false;
@@ -2576,7 +2601,7 @@ function Section051({
       title: "BLENDER",
       subtitle: "WIREFRAME MODELLING",
       type: "image",
-      src: "/images/demon-king-blender.png",
+      src: "/images/demon-king-blender.webp",
       alt: "Demon king, undead army and Gothic castle in Blender wireframe",
       process: [
         ["CHARACTER MODELLING", "Sculpting the demon king, armour, horns and undead characters."],
@@ -2601,7 +2626,7 @@ function Section051({
       title: "TEXTURING",
       subtitle: "MATERIALS & SURFACE DETAIL",
       type: "image",
-      src: "/images/demon-king-texturing.png",
+      src: "/images/demon-king-texturing.webp",
       alt: "Demon king, undead army and Gothic castle with detailed textures",
       process: [
         ["MATERIAL CREATION", "Defining realistic surfaces for armour, stone, skin and fabric."],
@@ -2626,7 +2651,7 @@ function Section051({
       title: "LIGHTING & CGI",
       subtitle: "CINEMATIC LIGHT & CGI",
       type: "image",
-      src: "/images/demon-king-lighting-cgi.png",
+      src: "/images/demon-king-lighting-cgi.webp",
       alt: "Demon king invasion scene with cinematic moonlight and CGI lighting",
       process: [
         ["KEY LIGHTING", "Establishing the moonlight and primary illumination."],
@@ -2651,7 +2676,7 @@ function Section051({
       title: "VFX COMPOSITING",
       subtitle: "DESTRUCTION & VISUAL EFFECTS",
       type: "image",
-      src: "/images/demon-king-vfx-compositing.png",
+      src: "/images/demon-king-vfx-compositing.webp",
       alt: "Demon king and undead army with castle destruction visual effects",
       process: [
         ["DESTRUCTION EFFECTS", "Integrating collapsing architecture and flying debris."],
@@ -2716,11 +2741,13 @@ function Section051({
       background.muted = true;
       background.loop = true;
       if (isHidden || !introFinished) background.pause();
-      else void background.play().catch(() => {});
+      else {
+        activateVideo(background);
+        void background.play().catch(() => {});
+      }
     }
 
     const intro = introRef.current;
-    if (!animationsEnabled && !introFinished) setIntroFinished(true);
     if (isHidden || introFinished || !animationsEnabled) {
       intro?.pause();
       return () => background?.pause();
@@ -2729,6 +2756,7 @@ function Section051({
     if (intro) {
       // Start the intro with sound. If the browser blocks audible autoplay,
       // keep the intro visible and offer a user-gesture playback control.
+      activateVideo(intro);
       intro.muted = false;
       intro.defaultMuted = false;
       intro.volume = 1;
@@ -2752,6 +2780,7 @@ function Section051({
       video.pause();
       return;
     }
+    activateVideo(video);
     video.currentTime = 0;
     video.muted = false;
     video.defaultMuted = false;
@@ -2822,7 +2851,7 @@ function Section051({
       <video
         ref={backgroundRef}
         className="section-051-background"
-        src="/videos/section5-1-background.mp4"
+        src="/videos/section5-1-background.720p.mp4"
         muted
         loop
         playsInline
@@ -2836,7 +2865,7 @@ function Section051({
           <video
             ref={introRef}
             className="section-051-intro-video"
-            src="/videos/section5-1-intro.mp4"
+            src="/videos/section5-1-intro.720p.mp4"
             muted={false}
             playsInline
             preload="none"
@@ -2865,7 +2894,7 @@ function Section051({
             <div className="section-051-pro-brand">
               <img
                 className="section-051-pro-brand-waterflow"
-                src="/videos/waterflow.gif"
+                src="/videos/waterflow.webp"
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
@@ -2920,7 +2949,7 @@ function Section051({
                       src="/videos/demon-king-final-output.mp4"
                       poster="/images/demon-king-vfx-compositing.png"
                       playsInline
-                      preload="auto"
+                      preload="metadata"
                       disablePictureInPicture
                       onPlay={() => setFinalVideoNeedsGesture(false)}
                     />
@@ -3005,7 +3034,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       number: "1", title: "CGI & 3D CREATION",
       description: "Creating digital characters, creatures and cinematic assets.", accent: "blue",
       stages: [
-        { label: "CGI & 3D WORKFLOW", image: "/images/venom-3d-modeling-workflow.png" },
+        { label: "CGI & 3D WORKFLOW", image: "/images/venom-3d-modeling-workflow.webp" },
       ],
       video: "/videos/venom-creature-awakening.mp4", heroAlt: "Final CGI character showcase",
     },
@@ -3013,7 +3042,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       number: "2", title: "VFX COMPOSITING",
       description: "Combining multiple visual elements into one seamless shot.", accent: "green",
       stages: [
-        { label: "VFX COMPOSITING WORKFLOW", image: "/images/warrior-vfx-compositing.png" },
+        { label: "VFX COMPOSITING WORKFLOW", image: "/images/warrior-vfx-compositing.webp" },
       ],
       video: "/videos/warrior-rise-of-the-king.mp4", heroAlt: "Final VFX compositing showcase",
     },
@@ -3021,7 +3050,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       number: "3", title: "ENVIRONMENT DESIGN",
       description: "Building cinematic locations and immersive digital worlds.", accent: "orange",
       stages: [
-        { label: "ENVIRONMENT DESIGN WORKFLOW", image: "/images/environment-3d-workflow.png" },
+        { label: "ENVIRONMENT DESIGN WORKFLOW", image: "/images/environment-3d-workflow.webp" },
       ],
       video: "/videos/eclipse-infernal-world.mp4", heroAlt: "Final digital environment showcase",
     },
@@ -3029,7 +3058,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       number: "4", title: "FX SIMULATION",
       description: "Creating realistic fire, smoke, destruction and energy effects.", accent: "violet",
       stages: [
-        { label: "FX SIMULATION WORKFLOW", image: "/images/explosion-vfx-simulation.png" },
+        { label: "FX SIMULATION WORKFLOW", image: "/images/explosion-vfx-simulation.webp" },
       ],
       video: "/videos/inferno-explosion-vfx.mp4", heroAlt: "Final FX simulation showcase",
     },
@@ -3044,11 +3073,14 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
     }
     if (!animationsEnabled) {
       intro?.pause();
+      // Motion preference changes can skip an in-progress intro.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIntroFinished(true);
       return;
     }
     if (introFinished) return;
     if (intro) {
+      activateVideo(intro);
       intro.muted = false;
       intro.defaultMuted = false;
       intro.volume = 1;
@@ -3075,28 +3107,23 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       artist.pause();
       return;
     }
+    activateVideo(artist);
     void artist.play().catch((error) => console.warn("Section 06 workstation video could not autoplay:", error));
     return () => artist.pause();
   }, [activeFactor, introFinished, isHidden]);
 
   useEffect(() => {
-    if (!isHidden && introFinished) return;
     showcaseRefs.current.forEach((video) => {
       if (!video) return;
       video.pause();
       video.currentTime = 0;
     });
-    setActiveFactor(null);
-    setPausedFactor(null);
   }, [introFinished, isHidden]);
 
   // Only the showcase video whose card is actually in view is allowed to
   // decode/play by default. A manually selected factor takes priority.
   useEffect(() => {
-    if (isHidden || !introFinished) {
-      setVisibleFactor(null);
-      return;
-    }
+    if (isHidden || !introFinished) return;
 
     const videos = showcaseRefs.current.filter(
       (video): video is HTMLVideoElement => Boolean(video)
@@ -3104,6 +3131,8 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
     if (!videos.length) return;
 
     if (!("IntersectionObserver" in window)) {
+      // The fallback is only reached after browser capability detection.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleFactor(0);
       return;
     }
@@ -3147,6 +3176,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       }
 
       const isAudible = activeFactor === index;
+      activateVideo(video);
       video.muted = !isAudible;
       video.defaultMuted = !isAudible;
       video.volume = 1;
@@ -3181,6 +3211,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
   const selectFactor = async (index: number) => {
     const selectedVideo = showcaseRefs.current[index];
     if (!selectedVideo) return;
+    activateVideo(selectedVideo);
 
     if (activeFactor === index) {
       if (pausedFactor === index) {
@@ -3230,7 +3261,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
     <section id="section-06" className="section-06 section-06-pipeline" hidden={isHidden} aria-label="Section 06 — The Art of VFX">
       {animationsEnabled && !introFinished && (
         <div className="section-06-intro-layer">
-          <video ref={introRef} className="section-06-intro-video" src="/videos/section%206-intro.mp4" playsInline preload="none" onEnded={finishIntro} onError={finishIntro} />
+          <video ref={introRef} className="section-06-intro-video" src="/videos/section%206-intro.mp4" playsInline preload="metadata" onEnded={finishIntro} onError={finishIntro} />
           {needsSoundGesture && <button type="button" className="section-06-sound-start" onClick={playIntroWithSound}>PLAY INTRO WITH SOUND <span>↗</span></button>}
           <button type="button" className="section-06-skip-intro" onClick={finishIntro}>SKIP INTRO</button>
         </div>
@@ -3244,7 +3275,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
               <span className="section-06-artist-shade" />
             </div>
             <div className="section-06-title-copy"><h1>THE ART OF VFX</h1><span>THE TECHNIQUES THAT BRING OUR WORLDS TO LIFE</span></div>
-            <img className="section-06-logo-glitch" src="/videos/section-06-goat-vfx-tv-glitch.gif" alt="THE GOAT VFX" loading="lazy" decoding="async" />
+            <img className="section-06-logo-glitch" src="/videos/section-06-goat-vfx-tv-glitch.webp" alt="THE GOAT VFX" loading="lazy" decoding="async" />
           </header>
           <main className="section-06-pipeline-list">
             <div className="section-06-progress-rail" aria-hidden="true"><span className="section-06-rail-line" /><span className="section-06-rail-arrow">↓</span></div>
@@ -3314,11 +3345,17 @@ function Section07({ onBack, onNext, isHidden = false, animationsEnabled }: { on
     }
     if (!animationsEnabled) {
       intro?.pause();
+      // Motion preference changes can skip an in-progress intro.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIntroFinished(true);
-      if (background) void background.play().catch(() => {});
+      if (background) {
+        activateVideo(background);
+        void background.play().catch(() => {});
+      }
       return;
     }
     if (!introFinished && intro) {
+      activateVideo(intro);
       intro.currentTime = 0;
       intro.muted = false;
       intro.defaultMuted = false;
@@ -3327,6 +3364,7 @@ function Section07({ onBack, onNext, isHidden = false, animationsEnabled }: { on
         console.warn("Section 07 intro playback was blocked:", error);
       });
     } else if (introFinished && background) {
+      activateVideo(background);
       void background.play().catch(() => {});
     }
     return () => {
@@ -3344,6 +3382,7 @@ function Section07({ onBack, onNext, isHidden = false, animationsEnabled }: { on
     }
     background.muted = true;
     background.loop = true;
+    activateVideo(background);
     void background.play().catch(() => {});
     return () => background.pause();
   }, [introFinished, isHidden]);
@@ -3362,12 +3401,12 @@ function Section07({ onBack, onNext, isHidden = false, animationsEnabled }: { on
 
   return (
     <section id="section-07" className="section-07-domain" hidden={isHidden} aria-label="Section 07 — The Goat's Domain">
-      <video ref={backgroundRef} className="section-07-background-video" src="/videos/goat-domain-background.mp4" muted loop playsInline preload="none" aria-hidden="true" />
+      <video ref={backgroundRef} className="section-07-background-video" src="/videos/goat-domain-background.720p.mp4" muted loop playsInline preload="none" aria-hidden="true" />
       <div className="section-07-video-shade" />
 
       {animationsEnabled && !introFinished && (
         <div className={`section-07-intro-layer ${introFading ? "is-fading" : ""}`}>
-          <video ref={introRef} className="section-07-intro-video" src="/videos/goat-awakens-intro.mp4" muted={false} playsInline preload="auto" onEnded={finishIntro} onError={finishIntro} />
+          <video ref={introRef} className="section-07-intro-video" src="/videos/goat-awakens-intro.mp4" muted={false} playsInline preload="metadata" onEnded={finishIntro} onError={finishIntro} />
           <button type="button" className="section-07-skip-intro" onClick={skipIntro}>SKIP INTRO <span>↗</span></button>
         </div>
       )}
@@ -3378,7 +3417,7 @@ function Section07({ onBack, onNext, isHidden = false, animationsEnabled }: { on
         <button type="button" className="section-07-next section-07-next-floating" onClick={onNext}>NEXT →</button>
         <div className="section-07-content">
           <header className="section-07-header">
-            <div className="section-07-wordmark"><img className="section-07-title-gif" src="/videos/7-green-slow.gif" alt="" aria-hidden="true" /><span className="section-07-wordmark-text">THE GOAT <span>VFX</span></span></div>
+            <div className="section-07-wordmark"><img className="section-07-title-gif" src="/videos/7-green-slow.webp" alt="" aria-hidden="true" /><span className="section-07-wordmark-text">THE GOAT <span>VFX</span></span></div>
           </header>
 
           <div className="section-07-main-grid">
@@ -3431,16 +3470,16 @@ function Section08({ onBack, isHidden = false }: { onBack: () => void; isHidden?
     }
     background.muted = true;
     background.loop = true;
+    activateVideo(background);
     void background.play().catch(() => {});
     return () => background.pause();
   }, [isHidden]);
 
   return (
     <section id="section-08" className="section-08-contact" hidden={isHidden} aria-label="Section 08 - Contact The GOAT VFX">
-      <video ref={backgroundRef} className="section-08-background-video" src="/videos/section-08-goat-awakens.mp4" muted loop autoPlay playsInline preload="auto" aria-hidden="true" />
+      <video ref={backgroundRef} className="section-08-background-video" src="/videos/section-08-goat-awakens.720p.mp4" muted loop playsInline preload="none" aria-hidden="true" />
       <div className="section-08-atmosphere" />
       <img className="section-08-logo-overlay" src="/images/logo-overlay.png" alt="The Goat VFX" />
-      <button type="button" className="section-08-back" onClick={onBack}>&#8592; BACK</button>
       <div className="section-08-layout">
         <main className="section-08-copy">
           <p className="section-08-kicker"><span /> CONTACT / THE GOAT AWAKENS</p>
@@ -3462,6 +3501,7 @@ function Section08({ onBack, isHidden = false }: { onBack: () => void; isHidden?
       </div>
       <div className="section-08-signoff">YOUR IDEA. OUR IMAGINATION. <strong>ONE EXTRAORDINARY RESULT.</strong></div>
       <div className="section-08-bottom-line"><span>VFX</span><i /><span>CGI</span><i /><span>ANIMATION</span><i /><span>CINEMATIC EXPERIENCES</span></div>
+      <button type="button" className="section-08-back" onClick={onBack}>&#8592; BACK</button>
     </section>
   );
 }
