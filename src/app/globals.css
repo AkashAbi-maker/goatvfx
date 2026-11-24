@@ -13006,7 +13006,7 @@ img[src*='.gif'] {
   .intro-welcome-categories i { width: 3px; height: 3px; }
   .cinematic-intro .intro-next-button {
     min-width: 170px;
-    bottom: 20px !important;
+    bottom: 36px !important;
     right: 50% !important;
     transform: translateX(50%) !important;
   }
@@ -14627,6 +14627,7 @@ img[src*='.gif'] {
 .section-04-central-logo img{display:block;width:clamp(104px,12vw,170px);height:auto;margin:0 auto;filter:brightness(1.08) saturate(1.08)}
 .cinematic-intro.universe-active .intro-brand.loop-brand .intro-tagline{transform:translateY(-12px)}
 .cinematic-intro.universe-active .intro-welcome{top:65%}
+@media(max-width:700px){.cinematic-intro.universe-active .intro-welcome{top:57%}}
 .our-work-spiderman-title-overlay{position:absolute;z-index:3;top:clamp(8px,1.5vh,20px);right:clamp(55px,8vw,100px);width:clamp(135px,17vw,220px);height:auto;object-fit:contain;filter:drop-shadow(0 3px 12px rgba(0,0,0,.8));pointer-events:none}
 @media(max-width:560px){.our-work-spiderman-title-overlay{top:7px;right:24px;width:clamp(112px,31vw,155px)}}
 .section-03-avengers-logo-overlay{position:absolute;z-index:20;top:clamp(6px,1.5vh,16px);right:clamp(20px,3vw,44px);width:clamp(130px,17vw,220px);height:auto;object-fit:contain;filter:drop-shadow(0 3px 12px rgba(0,0,0,.8));pointer-events:none}
@@ -16437,6 +16438,16 @@ img[src*='.gif'] {
   .section-08-project-panel {
     transform: none !important;
     margin-top: 140px !important;
+  }
+}
+
+/* Keep the first two mobile sections flush with the changing browser viewport. */
+@media (max-width: 760px) {
+  .cinematic-intro,
+  .our-work-section {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
   }
 }
 

@@ -117,22 +117,6 @@ useEffect(() => {
 
   useEffect(() => {
     if (!isActive || showUniverse) return;
-    if (!animationsEnabled) {
-      transitionStarted.current = true;
-      // Synchronize the intro UI with the user's motion preference.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setShowUniverse(true);
-      setLogoVisible(true);
-      const portal = videoRef.current;
-      const universe = universeRef.current;
-      if (portal) { portal.pause(); portal.muted = true; }
-      if (universe) {
-        universe.currentTime = 0;
-        activateVideo(universe);
-        void universe.play().catch((error) => console.warn("Universe loop playback failed:", error));
-      }
-      return;
-    }
     const video = videoRef.current;
     if (!video) return;
     activateVideo(video);
@@ -170,30 +154,7 @@ useEffect(() => {
     return () => {
       cancelled = true;
     };
-  }, [isActive, animationsEnabled, showUniverse]);
-
-  // When cinematic mode is switched off while the portal is playing, move
-  // directly to the looping Section 01 screen.
-  useEffect(() => {
-    if (isActive && !animationsEnabled && !showUniverse) {
-      transitionStarted.current = false;
-      const portal = videoRef.current;
-      if (portal) { portal.pause(); portal.muted = true; }
-      // Synchronize component state with media and motion preference.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsMuted(true);
-      setSoundEnabled(false);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setShowUniverse(true);
-      setLogoVisible(true);
-      const universe = universeRef.current;
-      if (universe) {
-        universe.currentTime = 0;
-        activateVideo(universe);
-        void universe.play().catch((error) => console.warn("Universe loop playback failed:", error));
-      }
-    }
-  }, [animationsEnabled, isActive, showUniverse]);
+  }, [isActive, showUniverse]);
 
   // ------------------------------------------
   // 2. UNIVERSE VIDEO READY
@@ -277,24 +238,6 @@ useEffect(() => {
 const skipIntro = () => {
   void startUniverse();
 };
-  // Turning cinematic mode OFF immediately stops every Section 01 intro layer.
-  useEffect(() => {
-    if (animationsEnabled) return;
-
-    const portal = videoRef.current;
-    const pullAudio = webPullAudioRef.current;
-    portal?.pause();
-    if (pullAudio) {
-      pullAudio.pause();
-      pullAudio.currentTime = 0;
-    }
-    // Stop the active transition when the motion preference changes.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsPulling(false);
-    setIsMuted(true);
-    setSoundEnabled(false);
-  }, [animationsEnabled]);
-
   // ------------------------------------------
   // 6. WEB PULL ANIMATION
   // ------------------------------------------
@@ -408,7 +351,7 @@ const triggerWebPull = useCallback(() => {
       <video
         ref={videoRef}
         className="intro-video"
-        autoPlay={animationsEnabled && !showUniverse}
+        autoPlay={!showUniverse}
         muted={isMuted}
         playsInline
         preload="metadata"
@@ -3176,13 +3119,17 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
       }
 
       const isAudible = activeFactor === index;
-      activateVideo(video);
+      // Let play() start the media request. Calling load() here can restart
+      // the request after a factor click and delay its audio.
+      video.preload = "auto";
       video.muted = !isAudible;
       video.defaultMuted = !isAudible;
       video.volume = 1;
-      void video.play().catch((error) => {
-        console.warn("Section 06 showcase video could not autoplay:", error);
-      });
+      if (video.paused) {
+        void video.play().catch((error) => {
+          console.warn("Section 06 showcase video could not autoplay:", error);
+        });
+      }
     });
   }, [activeFactor, pausedFactor, visibleFactor, introFinished, isHidden]);
 
@@ -3211,7 +3158,7 @@ function Section06({ onBack, onNext, isHidden = false, animationsEnabled }: { on
   const selectFactor = async (index: number) => {
     const selectedVideo = showcaseRefs.current[index];
     if (!selectedVideo) return;
-    activateVideo(selectedVideo);
+    selectedVideo.preload = "auto";
 
     if (activeFactor === index) {
       if (pausedFactor === index) {
